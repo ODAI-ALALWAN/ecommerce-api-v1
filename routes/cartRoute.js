@@ -7,6 +7,7 @@ const {
   clearCart,
   updateCartItemQuantity,
   applyCoupon
+// eslint-disable-next-line import/no-unresolved
 } = require("../controller/cartController");
 
 const authController = require("../controller/AuthController");

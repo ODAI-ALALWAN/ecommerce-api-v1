@@ -6,6 +6,7 @@ const {
   findAllOrders,
   findSpecificOrder,
   checkoutSession,
+// eslint-disable-next-line import/no-unresolved
 } = require("../controller/orderController");
 
 const authController = require("../controller/AuthController");

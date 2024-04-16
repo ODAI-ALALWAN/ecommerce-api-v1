@@ -8,6 +8,7 @@ const ReviewRoute= require('./ReviewRoute')
 const WishlistRoute= require('./wishlistRoute')
 const AddressRoute= require('./AddressesRoute')
 const CouponRoute = require('./couponRoute')
+// eslint-disable-next-line import/no-unresolved, node/no-missing-require
 const CartRoute = require('./cartRoute')
 const OrderRoute = require('./orderRoute')
 

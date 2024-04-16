@@ -6,6 +6,7 @@ const {
   createCoupon,
   updateCoupon,
   deleteCoupon,
+// eslint-disable-next-line node/no-missing-require
 } = require('../controller/couponController');
 
 const authService = require('../controller/AuthController');

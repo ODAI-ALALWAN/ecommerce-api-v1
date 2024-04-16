@@ -11,6 +11,7 @@ const ApiError = require('./utils/ApiError')
 const globalError = require('./middlewares/errorMiddleware')
 
 const mountRoutes = require('./routes');
+const { webhookCheckout } = require('./controller/orderController');
 
 const app = express()
 
@@ -31,6 +32,8 @@ app.use(express.static(path.join(__dirname, 'uploads')));
 
 // Route
 mountRoutes(app)
+
+app.post('/webhook-checkout', express.raw({ type: 'application/json' }) ,webhookCheckout)
 
 
 app.all('*' , (req ,res ,next ) => {

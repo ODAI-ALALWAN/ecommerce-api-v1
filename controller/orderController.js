@@ -207,7 +207,6 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
   };
   
 
-
 // @desc    This webhook will run when stripe payment success paid
 // @route   POST /webhook-checkout
 // @access  Protected/User
@@ -217,9 +216,8 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
   let event;
 
   try {
-    const buf = Buffer.from(JSON.stringify(req.body));
     event = stripe.webhooks.constructEvent(
-      buf,
+      req.body,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
@@ -233,6 +231,3 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({ received: true });
 });
-
-
-

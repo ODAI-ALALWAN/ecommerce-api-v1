@@ -168,11 +168,15 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
 
   const createCardOrder = async (session) => {
     const cartId = session.client_reference_id;
+    console.log(cartId)
     const shippingAddress = session.metadata;
     const oderPrice = session.amount_total / 100;
+    console.log(oderPrice)
   
     const cart = await CartModel.findById(cartId);
+    console.log(cart)
     const user = await UserModel.findOne({ email: session.customer_email });
+    console.log(user)
   
     // 3) Create order with default paymentMethodType card
     const order = await OrderModel.create({

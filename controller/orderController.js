@@ -1,4 +1,4 @@
-const { Buffer } = require('buffer');
+
 const stripe = require('stripe')(process.env.STRIPE_APKEY);
 
 const asyncHandler = require("express-async-handler");
@@ -170,16 +170,11 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
 
   const createCardOrder = async (session) => {
     const cartId = session.client_reference_id;
-
     const shippingAddress = session.metadata;
     const oderPrice = session.amount_total / 100;
-
-  
     const cart = await CartModel.findById(cartId);
-
     const user = await UserModel.findOne({ email: session.customer_email });
 
-  
     // 3) Create order with default paymentMethodType card
     const order = await OrderModel.create({
       user: user._id,
@@ -213,7 +208,6 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
 exports.webhookCheckout = asyncHandler(async (req, res, next) => {
   const sig = req.headers['stripe-signature'];
   
-
   let event;
 
   try {
@@ -227,7 +221,6 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
   }
   if (event.type === 'checkout.session.completed') {
     //  Create order
-    console.log('Create order.....')
     createCardOrder(event.data.object);
   }
 

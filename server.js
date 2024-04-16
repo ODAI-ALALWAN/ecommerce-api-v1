@@ -25,6 +25,9 @@ app.options('*', cors())
 // compress all responses
 app.use(compression())
 
+
+app.post('/webhook-checkout', express.raw({ type: 'application/json' }) ,webhookCheckout)
+
 //Middlewares
 app.use(express.json())
 app.use(express.static(path.join(__dirname, 'uploads')));
@@ -33,7 +36,7 @@ app.use(express.static(path.join(__dirname, 'uploads')));
 // Route
 mountRoutes(app)
 
-app.post('/webhook-checkout', express.raw({ type: 'application/json' }) ,webhookCheckout)
+
 
 
 app.all('*' , (req ,res ,next ) => {

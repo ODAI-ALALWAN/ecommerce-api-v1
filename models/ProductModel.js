@@ -79,26 +79,34 @@ const productSchema = new mongoose.Schema(
 productSchema.pre(/^find/ , function (next){
   this.populate({
     path : 'category',
-    select : 'name -_id'
+    select : 'name _id'
   })
   next()
 })
 
+
 const setImageUrl = (doc) => {
+  const baseUrl = process.env.BASE_URL;
+
   if (doc.imageCover) {
-    const imageUrl = `${process.env.BASE_URL}/products/${doc.imageCover}`;
-    doc.imageCover = imageUrl
-  }
-  if (doc.images){
-    const imagesList = []
-    doc.images.forEach((image) => {
-      const imageUrl = `${process.env.BASE_URL}/products/${image}`;
-      imagesList.push(imageUrl)
-    })
-    doc.images = imagesList
+    if (!doc.imageCover.startsWith(baseUrl)) {
+      const imageUrl = `${baseUrl}/products/${doc.imageCover}`;
+      doc.imageCover = imageUrl;
+    }
   }
 
-}
+  if (doc.images) {
+    const imagesList = doc.images.map((image) => {
+      if (!image.startsWith(baseUrl)) {
+        return `${baseUrl}/products/${image}`;
+      }
+      return image;
+    });
+    doc.images = imagesList;
+  }
+};
+
+
 //  return review 
 productSchema.virtual('reviews' , {
   ref:"Review",

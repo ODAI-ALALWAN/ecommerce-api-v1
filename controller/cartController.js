@@ -11,9 +11,11 @@ const calcTotalCartPrice = (cart) => {
   });
   cart.totalCartPrice = totalPrice.toFixed(2);
   cart.totalPriceAfterDiscount = undefined
-  // cart.totalPriceAfterDiscount = undefined;
+
   return totalPrice;
 };
+
+
 
 // @desc    Add product to  cart
 // @route   POST /api/v1/cart
@@ -71,11 +73,19 @@ exports.addProductToCart = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/cart
 // @access  Private/User
 exports.getLoggedUserCart = asyncHandler(async (req, res, next) => {
-  const cart = await Cart.findOne({ user: req.user._id });
+  const cart = await Cart.findOne({ user: req.user._id })
+  .populate({
+    path: 'cartItems.product', 
+    select: 'title imageCover price ratingsAverage category ', 
+    populate: {
+      path: 'category',        
+      select: 'name -_id'
+    }
+  });
 
   if (!cart) {
     return next(
-      new ApiError(`There is no cart for this user id : ${req.user._id}`, 404)
+      new ApiError(`There is no cart for you`, 404)
     );
   }
 
@@ -89,7 +99,8 @@ exports.getLoggedUserCart = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     numOfCartItems: totalQuantity,
-    data: cart,
+    data: cart 
+   
   });
 });
 

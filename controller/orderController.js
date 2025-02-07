@@ -174,7 +174,7 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
     const oderPrice = session.amount_total / 100;
     const cart = await CartModel.findById(cartId);
     const user = await UserModel.findOne({ email: session.customer_email });
-
+ 
     // 3) Create order with default paymentMethodType card
     const order = await OrderModel.create({
       user: user._id,

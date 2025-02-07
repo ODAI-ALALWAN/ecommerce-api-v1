@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/ApiError");
 const ApiFeatures = require("../utils/ApiFeatures");
 
+
 exports.deleteOne = (model) =>
   asyncHandler(async (req, res, next) => {
     const { id } = req.params;
@@ -64,6 +65,7 @@ exports.getAll = (model , modelName = '') =>
     if (req.filterObj) {
       filter = req.filterObj;
     }
+
     // Build Query
     const documentscount = await model.countDocuments();
     const apiFeatures = new ApiFeatures(model.find(filter), req.query)
@@ -77,6 +79,7 @@ exports.getAll = (model , modelName = '') =>
     const { mongooseQuery, paginationResult } = apiFeatures;
     // execute Query
     const product = await mongooseQuery;
+
 
     res
       .status(200)

@@ -7,7 +7,7 @@ const DBconnection  = () => {
     }).catch((err) => {
         console.log(`database err: ${err}`)
         process.exit(1)
-    })    
+    })
 }
 
 

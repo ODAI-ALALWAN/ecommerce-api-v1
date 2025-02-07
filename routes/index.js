@@ -8,9 +8,9 @@ const ReviewRoute= require('./ReviewRoute')
 const WishlistRoute= require('./wishlistRoute')
 const AddressRoute= require('./AddressesRoute')
 const CouponRoute = require('./couponRoute')
-// eslint-disable-next-line import/no-unresolved, node/no-missing-require
-const CartRoute = require('./cartRoute')
+const CartRoute = require('./CartRoute')
 const OrderRoute = require('./orderRoute')
+const BannerRoute = require('./BannerRoute')
 
 
 
@@ -29,6 +29,7 @@ const mountRoutes = (app) => {
     app.use('/api/v1/coupon' , CouponRoute )
     app.use('/api/v1/cart' , CartRoute )
     app.use('/api/v1/order' , OrderRoute )
+    app.use('/api/v1/banner' , BannerRoute )
 }
 
 module.exports = mountRoutes

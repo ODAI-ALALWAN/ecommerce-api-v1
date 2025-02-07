@@ -16,7 +16,7 @@ exports.resizeProductImages = asyncHandler(async (req, res, next) => {
       const imageCoverFileName = `product-${Math.round(Math.random() * 1e9)}-${Date.now()}-cover.jpeg`;
   
       await sharp(req.files.imageCover[0].buffer)
-        .resize(2000, 1333)
+        .resize(600, 600)
         .toFormat('jpeg')
         .jpeg({ quality: 95 })
         .toFile(`uploads/products/${imageCoverFileName}`);
@@ -32,7 +32,7 @@ exports.resizeProductImages = asyncHandler(async (req, res, next) => {
           const imageName = `product-${Math.round(Math.random() * 1e9)}-${Date.now()}-${index + 1}.jpeg`;
   
           await sharp(img.buffer)
-            .resize(2000, 1333)
+            .resize(600, 600)
             .toFormat('jpeg')
             .jpeg({ quality: 95 })
             .toFile(`uploads/products/${imageName}`);

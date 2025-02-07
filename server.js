@@ -3,6 +3,7 @@ const cors = require('cors')
 const express = require('express')
 const dotenv = require('dotenv')
 const compression = require('compression')
+const cookieParser = require('cookie-parser')
 
 const DBconnection = require('./config/database')
 
@@ -18,6 +19,7 @@ const app = express()
 // Connect DB
 DBconnection()
 
+
 // Enable other domains to access your application
 app.use(cors())
 app.options('*', cors())
@@ -30,6 +32,7 @@ app.post('/webhook-checkout', express.raw({ type: 'application/json' }) ,webhook
 
 //Middlewares
 app.use(express.json())
+app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'uploads')));
 
 

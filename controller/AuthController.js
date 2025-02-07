@@ -6,10 +6,22 @@ const ApiError = require("../utils/ApiError");
 const UserModel = require("../models/UserModel");
 const sendEmail = require("../utils/sendEmail");
 
+
 const createToken = (payload) =>
-  jwt.sign({ userId: payload }, process.env.JWT_TOKEN, {
-    expiresIn: process.env.JWT_TOKEN_EX,
+  jwt.sign({ userId: payload , role : payload }, process.env.JWT_TOKEN, {
+    expiresIn: '1d',
   });
+
+const refreshToken = (payload) =>
+  jwt.sign({ userId: payload }, process.env.JWT_TOKEN_REFRESH, {
+    expiresIn: '1d',
+  });
+
+  
+
+  
+
+
 
 // @desc    Signup
 // @route   post /api/v1/auth/signup
@@ -39,13 +51,69 @@ exports.login = asyncHandler(async (req, res, next) => {
     return next(new ApiError("Incorrect email or password", 401));
   }
 
-  const token = createToken(user._id);
+  const token = createToken(user._id,user.role);
 
-  res.status(201).json({ data: user, token });
+  const reToken = refreshToken(user._id)
+
+  res.cookie("Token", reToken, {
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    httpOnly: true
+  });
+
+
+  res.status(201).json({ message : " logged in successfully "   , data: user, token });
 });
+
+
+
+
+
+exports.refreshToken = asyncHandler(async (req, res, next) => {
+  const  cookies  = req.cookies;
+
+
+  if (!cookies.Token) {
+    return next(new ApiError("You are not logged in", 401));
+  }
+
+  const reToken = cookies.Token
+
+  jwt.verify(
+    reToken,
+    process.env.JWT_TOKEN_REFRESH,
+    async (err, decoded) => {
+      if (err) return next(new ApiError("there is error from decoded token", 403));
+
+      const fondUser = await UserModel.findById({ _id: decoded.userId });
+
+      if (!fondUser) return next(new ApiError("Unauthorized", 401));
+
+      const token = createToken(fondUser._id, fondUser.role);
+
+      res.json({ token });
+    }
+  );
+});
+
+
+
+
+
+exports.LogOut = asyncHandler(async (req, res, next) => {
+  const cookies  = req.cookies;
+  
+  if (!cookies.Token) {
+    return next(new ApiError('Not logged out Try again',204));
+  }
+
+  res.clearCookie("Token", {httpOnly : true});
+  return res.json({ message :  'logged out successfully' , status: true });
+});
+
 
 exports.protect = asyncHandler(async (req, res, next) => {
   // 1) Check if token exist, if exist get
+
   let token;
   if (
     req.headers.authorization &&
